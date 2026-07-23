@@ -1,4 +1,4 @@
-package com.cmcni.sales_erp_api_server.config.swagger;
+package com.cmcni.sales_management_system_backend.config.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
