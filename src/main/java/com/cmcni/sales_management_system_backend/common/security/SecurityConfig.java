@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     final private CustomAccessDeniedHandler customAccessDeniedHandler;
+    final private CustomAuthenticationFilter customAuthenticationFilter;
     final private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
@@ -64,7 +66,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, SecurityConfigPermitAllRepository.getPaths(HttpMethod.POST)).permitAll()
                                 .anyRequest().authenticated())
                 .logout((logoutConfig) ->
-                        logoutConfig.logoutSuccessUrl("/"));
+                        logoutConfig.logoutSuccessUrl("/"))
+                // 지정된 필터 앞에 CustomFilter를 추가한다. UsernamePasswordAuthenticationFilter보다 먼저 실행
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
