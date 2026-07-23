@@ -15,12 +15,8 @@ public class UserCreateRequest {
     private final String phoneNumber;
 
     public User toUser(UserRoleType userRoleType, String name, String phoneNumber, String emailAddress, String encodedPassword) {
-        return User.builder()
-                .userRoleType(userRoleType)
-                .name(name)
-                .password(encodedPassword)
-                .phoneNumber(phoneNumber)
-                .emailAddress(emailAddress)
-                .build();
+        return new User(
+                userRoleType, emailAddress, encodedPassword, name, phoneNumber
+        );
     }
 }
