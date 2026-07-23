@@ -37,6 +37,11 @@ public class UserServiceImpl implements UserService {
         return new UserCreateResponse(user.getUserRoleType().getRoleType(), user.getEmailAddress(), user.getName(), user.getPhoneNumber());
     }
 
+    @Override
+    public User findByEmailAddress(String emailAddress) {
+        return userRepository.findByEmailAddress(emailAddress).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+    }
+
     private void checkDuplicationEmailAddress(EmailAddress emailAddress) {
         userRepository.findByEmailAddress(emailAddress.getEmailAddress()).orElseThrow(() -> new CustomException(CustomErrorCode.USER_EMAIL_ADDRESS_ALREADY_EXIST));
     }

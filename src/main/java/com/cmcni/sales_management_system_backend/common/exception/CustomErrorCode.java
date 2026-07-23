@@ -21,7 +21,7 @@ public enum CustomErrorCode {
 
     USER_NOT_FOUND("존재하는 유저가 아닙니다.", NOT_FOUND),
     USER_EMAIL_ADDRESS_ALREADY_EXIST("해당 이메일로 가입된 내역이 존재합니다. 다른 이메일을 사용해 주세요.", BAD_REQUEST),
-    USER_LOGIN_FAILED("아이디 혹은 비밀번호를 다시 입력해 주세요.", BAD_REQUEST),
+    USER_LOGIN_FAILED("아이디 혹은 비밀번호가 일치하지 않습니다. 다시 입력해 주세요.", BAD_REQUEST),
     USER_PASSWORD_NOT_MATCHED("현재 비밀번호가 일치하지 않습니다.", BAD_REQUEST),
 
     USER_ROLE_NOT_FOUND("존재하는 권한이 아닙니다.", NOT_FOUND)
