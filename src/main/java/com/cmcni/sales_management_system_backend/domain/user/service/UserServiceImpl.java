@@ -9,6 +9,7 @@ import com.cmcni.sales_management_system_backend.domain.user.service.request.Use
 import com.cmcni.sales_management_system_backend.domain.user.service.response.UserCreateResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleTypeRepository userRoleTypeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
@@ -27,7 +29,9 @@ public class UserServiceImpl implements UserService {
         EmailAddress emailAddress = new EmailAddress(userCreateRequest.getEmailAddress());
         checkDuplicationEmailAddress(emailAddress);
 
-        User user = userCreateRequest.toUser(userRoleType, name.getName(), phoneNumber.getPhoneNumber(), emailAddress.getEmailAddress());
+        String encodedPassword = passwordEncoder.encode(userCreateRequest.getPassword());
+
+        User user = userCreateRequest.toUser(userRoleType, name.getName(), phoneNumber.getPhoneNumber(), emailAddress.getEmailAddress(), encodedPassword);
         userRepository.save(user);
 
         return new UserCreateResponse(user.getUserRoleType().getRoleType(), user.getEmailAddress(), user.getName(), user.getPhoneNumber());

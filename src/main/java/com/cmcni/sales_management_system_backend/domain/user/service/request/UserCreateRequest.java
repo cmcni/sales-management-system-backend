@@ -14,10 +14,11 @@ public class UserCreateRequest {
     private final String name;
     private final String phoneNumber;
 
-    public User toUser(UserRoleType userRoleType, String name, String phoneNumber, String emailAddress) {
+    public User toUser(UserRoleType userRoleType, String name, String phoneNumber, String emailAddress, String encodedPassword) {
         return User.builder()
                 .userRoleType(userRoleType)
                 .name(name)
+                .password(encodedPassword)
                 .phoneNumber(phoneNumber)
                 .emailAddress(emailAddress)
                 .build();
