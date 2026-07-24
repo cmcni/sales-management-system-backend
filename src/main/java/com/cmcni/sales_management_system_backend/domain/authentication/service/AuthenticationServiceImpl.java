@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -26,6 +27,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     public LoginResponseForm getToken(LoginRequestForm loginRequestForm) {
+    @Transactional
+    public LoginResponseForm login(LoginRequestForm loginRequestForm) {
 
         // 입력받은 아이디를 기반으로 유저 정보를 찾는다. 없을 시 예외처리
         User user = userRepository.findByEmailAddress(loginRequestForm.emailAddress()).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));

@@ -6,4 +6,5 @@ import com.cmcni.sales_management_system_backend.domain.authentication.controlle
 public interface AuthenticationService {
 
     LoginResponseForm getToken(LoginRequestForm loginRequestForm);
+    LoginResponseForm login(LoginRequestForm loginRequestForm);
 }
