@@ -26,7 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public LoginResponseForm getToken(LoginRequestForm loginRequestForm) {
     @Transactional
     public LoginResponseForm login(LoginRequestForm loginRequestForm) {
 
@@ -51,5 +50,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         UserResponse userResponse = UserResponse.from(user);
 
         return new LoginResponseForm(authTokenResponse, userResponse);
+    }
+
+    @Override
+    public void logout(User user) {
+        user.setAccessToken(null);
+        user.setRefreshToken(null);
+        userRepository.save(user);
     }
 }

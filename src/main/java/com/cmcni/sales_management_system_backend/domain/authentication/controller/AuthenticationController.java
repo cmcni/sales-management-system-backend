@@ -1,6 +1,7 @@
 package com.cmcni.sales_management_system_backend.domain.authentication.controller;
 
 import com.cmcni.sales_management_system_backend.common.response.ApiResponse;
+import com.cmcni.sales_management_system_backend.common.security.CustomUserDetails;
 import com.cmcni.sales_management_system_backend.domain.authentication.controller.request_form.LoginRequestForm;
 import com.cmcni.sales_management_system_backend.domain.authentication.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,5 +25,11 @@ public class AuthenticationController {
     public Object login(@RequestBody LoginRequestForm loginRequestForm) {
         return ApiResponse.success(authenticationService.login(loginRequestForm));
     }
+
+    @GetMapping("/logout")
+    @Operation(summary = "로그인한 회원의 AccessToken, RefreshToken을 삭제합니다.")
+    public Object logout(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        authenticationService.logout(customUserDetails.getUser());
+        return ApiResponse.success();
     }
 }
