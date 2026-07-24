@@ -8,7 +8,7 @@ public class SecurityConfigPermitAllRepository {
     private SecurityConfigPermitAllRepository() {}
     private static final String ROOT_PATH = "/";
     private static final PermitAllPath[] permitAllPaths = {
-            new PermitAllPath(HttpMethod.POST, ROOT_PATH + "authentication/get-token"),
+            new PermitAllPath(HttpMethod.POST, ROOT_PATH + "authentication/login"),
             new PermitAllPath(HttpMethod.POST, ROOT_PATH + "user/sign-up"),
             new PermitAllPath(HttpMethod.GET, ROOT_PATH + "user/sign-up/role-type"),
     };
