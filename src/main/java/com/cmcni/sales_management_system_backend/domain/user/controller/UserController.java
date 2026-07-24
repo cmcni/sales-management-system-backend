@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -25,5 +22,11 @@ public class UserController {
     @Operation(summary = "사용자가 회원 정보를 입력하고 회원 가입을 합니다.")
     public Object signUp(@RequestBody UserCreateRequestForm userCreateRequestForm) {
         return ApiResponse.success(userService.signUp(userCreateRequestForm.toRequest()));
+    }
+
+    @GetMapping("/sign-up/role-type")
+    @Operation(summary = "사용자가 회원 가입 시 필요한 권한을 선택할 수 있도록 권한 목록을 반환합니다.")
+    public Object signUpRoleTypeList() {
+        return ApiResponse.success(userService.getRoleTypeList());
     }
 }

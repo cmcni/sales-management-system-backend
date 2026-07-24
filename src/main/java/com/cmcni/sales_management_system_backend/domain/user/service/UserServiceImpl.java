@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,11 +47,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkDuplicationEmailAddress(EmailAddress emailAddress) {
-        userRepository.findByEmailAddress(emailAddress.getEmailAddress()).orElseThrow(() -> new CustomException(CustomErrorCode.USER_EMAIL_ADDRESS_ALREADY_EXIST));
         userRepository.findByEmailAddress(emailAddress.getEmailAddress()).ifPresent(user -> {
             throw new CustomException(CustomErrorCode.USER_EMAIL_ADDRESS_ALREADY_EXIST);
         });
     }
 
+    @Override
+    public List<Map<String, Object>> getRoleTypeList() {
+        log.info("UserService getRoleTypeList(): start");
+        return userRoleTypeRepository.findAll().stream()
+                .map(entity -> {
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    map.put("id", entity.getId());
+                    map.put("label", entity.getRoleType().getLabel() + "(" + entity.getRoleType().name() + ")");
+                    return map;
+                })
+                .toList();
     }
 }
