@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler))
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, SecurityConfigPermitAllRepository.getPaths(HttpMethod.GET)).permitAll()
                         .requestMatchers(HttpMethod.POST, SecurityConfigPermitAllRepository.getPaths(HttpMethod.POST)).permitAll()
                                 .anyRequest().authenticated())
