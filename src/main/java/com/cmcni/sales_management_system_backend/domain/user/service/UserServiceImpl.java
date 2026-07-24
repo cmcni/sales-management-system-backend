@@ -44,5 +44,10 @@ public class UserServiceImpl implements UserService {
 
     private void checkDuplicationEmailAddress(EmailAddress emailAddress) {
         userRepository.findByEmailAddress(emailAddress.getEmailAddress()).orElseThrow(() -> new CustomException(CustomErrorCode.USER_EMAIL_ADDRESS_ALREADY_EXIST));
+        userRepository.findByEmailAddress(emailAddress.getEmailAddress()).ifPresent(user -> {
+            throw new CustomException(CustomErrorCode.USER_EMAIL_ADDRESS_ALREADY_EXIST);
+        });
+    }
+
     }
 }
