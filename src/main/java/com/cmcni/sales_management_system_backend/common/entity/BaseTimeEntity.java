@@ -1,5 +1,6 @@
 package com.cmcni.sales_management_system_backend.common.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -15,9 +16,11 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
 
     @CreatedDate
+    @Column(comment = "생성일", columnDefinition = "datetime")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(comment = "수정일", columnDefinition = "datetime")
     private LocalDateTime modifiedAt;
 
 }
