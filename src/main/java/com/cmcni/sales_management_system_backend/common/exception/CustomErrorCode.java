@@ -25,7 +25,11 @@ public enum CustomErrorCode {
     USER_LOGIN_FAILED("아이디 혹은 비밀번호가 일치하지 않습니다. 다시 입력해 주세요.", BAD_REQUEST),
     USER_PASSWORD_NOT_MATCHED("현재 비밀번호가 일치하지 않습니다.", BAD_REQUEST),
 
-    USER_ROLE_NOT_FOUND("존재하는 권한이 아닙니다.", NOT_FOUND)
+    USER_ROLE_NOT_FOUND("존재하는 권한이 아닙니다.", NOT_FOUND),
+
+    PRODUCT_MODEL_IS_NOT_EXIST("존재하는 제품 모델이 아닙니다.", NOT_FOUND),
+    PRODUCT_CATEGORY_IS_NOT_EXIST("존재하는 제품 카테고리가 아닙니다.", NOT_FOUND),
+    PRODUCT_CATEGORY_PARENT_IS_NOT_EXIST("부모 카테고리를 찾을 수 없습니다.", NOT_FOUND)
 
     ;
 
