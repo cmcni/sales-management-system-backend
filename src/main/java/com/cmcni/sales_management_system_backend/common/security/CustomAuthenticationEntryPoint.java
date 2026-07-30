@@ -43,6 +43,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                 objectMapper.writeValue(os, ErrorResponse.create(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase()));
                 os.flush();
             }
+            return;
         }
 
         log.error("Not Authenticated Request", authException);

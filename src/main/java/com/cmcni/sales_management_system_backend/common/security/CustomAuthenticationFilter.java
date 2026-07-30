@@ -50,6 +50,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
      * - 토큰의 jti(rememberToken)가 DB에 저장된 값과 같은지 검증
      */
     private void handleAccessToken(JwtData jwtData) {
+        jwtData.verifyAccess();
         CustomUserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtData.getEmail());
         jwtData.verifyTokenId(userDetails);
 

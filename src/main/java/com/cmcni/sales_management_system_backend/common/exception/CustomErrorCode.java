@@ -13,6 +13,7 @@ public enum CustomErrorCode {
 
     TEMP_TOKEN_EXPIRED_OR_INVALID("만료 혹은 잘못된 임시 토큰입니다.", BAD_REQUEST),
     ACCESS_TOKEN_IS_EXPIRED_OR_INVALID("만료 혹은 잘못된 토큰입니다.", BAD_REQUEST),
+    REFRESH_TOKEN_IS_EXPIRED_OR_INVALID("만료 혹은 잘못된 리프레시 토큰입니다. 다시 로그인 해주세요.", BAD_REQUEST),
 
     STRING_CANNOT_BE_NULL("문자열은 NULL이 될 수 없습니다.", BAD_REQUEST),
     STRING_CANNOT_BE_EMPTY("문자열은 비어있을 수 없습니다.", BAD_REQUEST),

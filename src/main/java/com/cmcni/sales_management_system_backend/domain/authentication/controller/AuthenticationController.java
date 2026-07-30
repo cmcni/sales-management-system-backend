@@ -6,6 +6,7 @@ import com.cmcni.sales_management_system_backend.domain.authentication.controlle
 import com.cmcni.sales_management_system_backend.domain.authentication.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,5 +32,11 @@ public class AuthenticationController {
     public Object logout(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         authenticationService.logout(customUserDetails.getUser());
         return ApiResponse.success();
+    }
+
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh Token을 통해 AccessToken, RefreshToken을 재발급합니다.")
+    public Object refreshToken(HttpServletRequest request) {
+        return ApiResponse.success(authenticationService.refreshToken(request));
     }
 }

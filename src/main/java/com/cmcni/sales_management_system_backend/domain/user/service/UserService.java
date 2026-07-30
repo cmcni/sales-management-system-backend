@@ -10,7 +10,5 @@ import java.util.Map;
 public interface UserService {
     UserCreateResponse signUp(UserCreateRequest request);
 
-    User findByEmailAddress(String emailAddress);
-
     List<Map<String, Object>> getRoleTypeList();
 }
