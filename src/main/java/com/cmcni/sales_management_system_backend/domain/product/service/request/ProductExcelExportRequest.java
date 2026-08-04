@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 public class ProductExcelExportRequest {
     private final Long productCategoryId;
     private final Long productModelId;
-    private final String productModelName;
+    private final String productName;
     private final Integer productRecommendedSellingPrice;
 }

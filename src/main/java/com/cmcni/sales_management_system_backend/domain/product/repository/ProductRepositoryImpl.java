@@ -72,7 +72,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(
                         categoryIdEq(productExcelExportRequest.getProductCategoryId()),
                         modelIdEq(productExcelExportRequest.getProductModelId()),
-                        modelNameContains(productExcelExportRequest.getProductModelName()),
+                        modelNameContains(productExcelExportRequest.getProductName()),
                         recommendedSellingPriceEq(productExcelExportRequest.getProductRecommendedSellingPrice())
                 )
                 .orderBy(toOrderSpecifiers(pageable.getSort()))
@@ -89,7 +89,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(
                         categoryIdEq(productExcelExportRequest.getProductCategoryId()),
                         modelIdEq(productExcelExportRequest.getProductModelId()),
-                        modelNameContains(productExcelExportRequest.getProductModelName()),
+                        modelNameContains(productExcelExportRequest.getProductName()),
                         recommendedSellingPriceEq(productExcelExportRequest.getProductRecommendedSellingPrice())
                 )
                 .fetchOne();
