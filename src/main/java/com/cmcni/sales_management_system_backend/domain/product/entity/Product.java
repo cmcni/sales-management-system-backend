@@ -15,7 +15,7 @@ public class Product extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "model_id", nullable = false, comment = "제품 모델")
+    @JoinColumn(name = "model_id", comment = "제품 모델")
     private ProductModel model;
 
     @ManyToOne(fetch = FetchType.LAZY)

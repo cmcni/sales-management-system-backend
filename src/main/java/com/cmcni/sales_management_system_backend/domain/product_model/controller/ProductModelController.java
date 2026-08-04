@@ -1,6 +1,8 @@
 package com.cmcni.sales_management_system_backend.domain.product_model.controller;
 
 import com.cmcni.sales_management_system_backend.common.response.ApiResponse;
+import com.cmcni.sales_management_system_backend.domain.product_category.entity.ProductCategory;
+import com.cmcni.sales_management_system_backend.domain.product_category.service.ProductCategoryService;
 import com.cmcni.sales_management_system_backend.domain.product_model.controller.request_form.ProductModelCreateRequestForm;
 import com.cmcni.sales_management_system_backend.domain.product_model.service.ProductModelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 public class ProductModelController {
 
     private final ProductModelService productModelService;
+    private final ProductCategoryService productCategoryService;
 
     @PostMapping("/create")
     @Operation(summary = "제품 모델을 생성합니다.")
     public Object create(@RequestBody ProductModelCreateRequestForm productModelCreateRequestForm) {
-        return ApiResponse.success(productModelService.create(productModelCreateRequestForm.toRequest()));
+        ProductCategory productCategory = productCategoryService.findById(productModelCreateRequestForm.getProductCategoryId());
+        return ApiResponse.success(productModelService.create(productModelCreateRequestForm.toRequest(productCategory)));
     }
 
     @GetMapping("/find-all")

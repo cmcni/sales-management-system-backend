@@ -2,16 +2,29 @@ package com.cmcni.sales_management_system_backend.domain.product.controller;
 
 import com.cmcni.sales_management_system_backend.common.response.ApiResponse;
 import com.cmcni.sales_management_system_backend.domain.product.controller.request_form.ProductCreateRequestForm;
+import com.cmcni.sales_management_system_backend.domain.product.controller.request_form.ProductExcelExportRequestForm;
 import com.cmcni.sales_management_system_backend.domain.product.controller.request_form.ProductSearchRequestForm;
 import com.cmcni.sales_management_system_backend.domain.product.service.ProductService;
+import com.cmcni.sales_management_system_backend.domain.product.service.response.ProductExcelExportResponse;
+import com.cmcni.sales_management_system_backend.domain.product.service.response.ProductSearchResponse;
+import com.cmcni.sales_management_system_backend.utility.excel.ExcelSheetData;
+import com.cmcni.sales_management_system_backend.utility.excel.SXSSFExcelFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -34,6 +47,18 @@ public class ProductController {
     public Object search(@ModelAttribute ProductSearchRequestForm productSearchRequestForm,
                          @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ApiResponse.success(productService.search(productSearchRequestForm.toRequest(), pageable));
+    }
+
+    @GetMapping("/excel/export")
+    @Operation(summary = "검색 조건에 따른 제품 목록을 엑셀로 추출합니다.")
+    public void excelExport(@ModelAttribute ProductExcelExportRequestForm productExcelExportRequestForm, Pageable pageable,
+                            HttpServletResponse response) throws IOException {
+        List<ProductExcelExportResponse> content = productService.excelExport(productExcelExportRequestForm.toRequest(), pageable).getContent();
+
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode("제품_목록.xlsx", StandardCharsets.UTF_8).replace("+", "%20"));
+
+        new SXSSFExcelFile(ExcelSheetData.of(content, ProductExcelExportResponse.class), response);
     }
 
     @DeleteMapping("/delete/{product-id}")

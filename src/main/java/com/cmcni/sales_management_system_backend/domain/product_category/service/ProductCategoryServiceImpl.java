@@ -2,15 +2,19 @@ package com.cmcni.sales_management_system_backend.domain.product_category.servic
 
 import com.cmcni.sales_management_system_backend.common.exception.CustomErrorCode;
 import com.cmcni.sales_management_system_backend.common.exception.CustomException;
+import com.cmcni.sales_management_system_backend.domain.product.entity.Product;
+import com.cmcni.sales_management_system_backend.domain.product.repository.ProductRepository;
 import com.cmcni.sales_management_system_backend.domain.product_category.entity.ProductCategory;
 import com.cmcni.sales_management_system_backend.domain.product_category.repository.ProductCategoryRepository;
 import com.cmcni.sales_management_system_backend.domain.product_category.service.request.ProductCategoryCreateRequest;
 import com.cmcni.sales_management_system_backend.domain.product_category.service.response.ProductCategoryFindResponse;
+import com.cmcni.sales_management_system_backend.domain.product_model.service.response.ProductModelFindResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,6 +25,7 @@ import java.util.stream.Collectors;
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<ProductCategoryFindResponse> create(ProductCategoryCreateRequest productCategoryCreateRequest) {
@@ -48,21 +53,47 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
                 .filter(category -> !category.isRoot())
                 .collect(Collectors.groupingBy(category -> category.getParent().getId()));
 
+        Map<Long, List<ProductModelFindResponse>> productModelsByCategoryId = groupProductModelsByCategoryId();
+
         return categories.stream()
                 .filter(ProductCategory::isRoot)
                 .sorted(Comparator.comparing(ProductCategory::getSortOrder))
-                .map(root -> toTreeResponse(root, childrenByParentId))
+                .map(root -> toTreeResponse(root, childrenByParentId, productModelsByCategoryId))
                 .toList();
     }
 
-    private ProductCategoryFindResponse toTreeResponse(ProductCategory category, Map<Long, List<ProductCategory>> childrenByParentId) {
+    // 카테고리별로 직접 연결된(=해당 카테고리를 참조하는 Product들의) model을 중복 없이 모은다.
+    private Map<Long, List<ProductModelFindResponse>> groupProductModelsByCategoryId() {
+        return productRepository.findAllWithModel().stream()
+                .collect(Collectors.groupingBy(
+                        product -> product.getCategory().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.toMap(
+                                        product -> product.getModel().getId(),
+                                        Product::getModel,
+                                        (existing, replacement) -> existing,
+                                        LinkedHashMap::new
+                                ),
+                                modelsById -> modelsById.values().stream().map(ProductModelFindResponse::from).toList()
+                        )
+                ));
+    }
+
+    @Override
+    public ProductCategory findById(Long productCategoryId) {
+        return productCategoryRepository.findById(productCategoryId).orElseThrow(() -> new CustomException(CustomErrorCode.PRODUCT_CATEGORY_IS_NOT_EXIST));
+    }
+
+    private ProductCategoryFindResponse toTreeResponse(ProductCategory category, Map<Long, List<ProductCategory>> childrenByParentId, Map<Long, List<ProductModelFindResponse>> productModelsByCategoryId) {
         List<ProductCategoryFindResponse> children = childrenByParentId
                 .getOrDefault(category.getId(), List.of())
                 .stream()
                 .sorted(Comparator.comparing(ProductCategory::getSortOrder))
-                .map(child -> toTreeResponse(child, childrenByParentId))
+                .map(child -> toTreeResponse(child, childrenByParentId, productModelsByCategoryId))
                 .toList();
 
-        return ProductCategoryFindResponse.from(category, children);
+        List<ProductModelFindResponse> productModels = productModelsByCategoryId.getOrDefault(category.getId(), List.of());
+
+        return ProductCategoryFindResponse.from(category, children, productModels);
     }
 }

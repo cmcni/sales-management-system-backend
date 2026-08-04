@@ -1,6 +1,7 @@
 package com.cmcni.sales_management_system_backend.domain.product_model.entity;
 
 import com.cmcni.sales_management_system_backend.common.entity.BaseTimeEntity;
+import com.cmcni.sales_management_system_backend.domain.product_category.entity.ProductCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,12 +12,17 @@ public class ProductModel extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, comment = "모델명")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_category_id", nullable = false)
+    private ProductCategory productCategory;
+
+    @Column(comment = "모델명")
     private String name;
 
     public ProductModel() {}
 
-    public ProductModel(String name) {
+    public ProductModel(ProductCategory productCategory, String name) {
+        this.productCategory = productCategory;
         this.name = name;
     }
 }

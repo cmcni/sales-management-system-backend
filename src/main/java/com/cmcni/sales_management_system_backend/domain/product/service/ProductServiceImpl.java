@@ -4,7 +4,9 @@ import com.cmcni.sales_management_system_backend.common.exception.CustomErrorCod
 import com.cmcni.sales_management_system_backend.common.exception.CustomException;
 import com.cmcni.sales_management_system_backend.domain.product.repository.ProductRepository;
 import com.cmcni.sales_management_system_backend.domain.product.service.request.ProductCreateRequest;
+import com.cmcni.sales_management_system_backend.domain.product.service.request.ProductExcelExportRequest;
 import com.cmcni.sales_management_system_backend.domain.product.service.request.ProductSearchRequest;
+import com.cmcni.sales_management_system_backend.domain.product.service.response.ProductExcelExportResponse;
 import com.cmcni.sales_management_system_backend.domain.product.service.response.ProductSearchResponse;
 import com.cmcni.sales_management_system_backend.domain.product_category.entity.ProductCategory;
 import com.cmcni.sales_management_system_backend.domain.product_category.repository.ProductCategoryRepository;
@@ -28,7 +30,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void create(ProductCreateRequest productCreateRequest) {
-        ProductModel productModel = productModelRepository.findById(productCreateRequest.getProductModelId()).orElseThrow(() -> new CustomException(CustomErrorCode.PRODUCT_MODEL_IS_NOT_EXIST));
+        ProductModel productModel = null;
+        if (productCreateRequest.getProductModelId() != null) {
+            productModel = productModelRepository.findById(productCreateRequest.getProductModelId()).orElseThrow(() -> new CustomException(CustomErrorCode.PRODUCT_MODEL_IS_NOT_EXIST));    
+        }
         ProductCategory productCategory = productCategoryRepository.findById(productCreateRequest.getProductCategoryId()).orElseThrow(() -> new CustomException(CustomErrorCode.PRODUCT_CATEGORY_IS_NOT_EXIST));
         productRepository.save(productCreateRequest.toProduct(productModel, productCategory));
     }
@@ -41,7 +46,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Page<ProductSearchResponse> search(ProductSearchRequest productSearchRequest, Pageable pageable) {
-        return productRepository.search(productSearchRequest, pageable)
-                .map(ProductSearchResponse::from);
+        return productRepository.search(productSearchRequest, pageable).map(ProductSearchResponse::from);
+    }
+
+    @Override
+    public Page<ProductExcelExportResponse> excelExport(ProductExcelExportRequest productExcelExportRequest, Pageable pageable) {
+        return productRepository.excelExport(productExcelExportRequest, pageable).map(ProductExcelExportResponse::from);
     }
 }

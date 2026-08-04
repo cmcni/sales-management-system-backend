@@ -11,6 +11,10 @@ public class ProductModelFindResponse {
     private final String name;
 
     public static ProductModelFindResponse from(ProductModel productModel) {
+        if (productModel == null) {
+            return null;
+        }
+
         return new ProductModelFindResponse(
                 productModel.getId(),
                 productModel.getName()

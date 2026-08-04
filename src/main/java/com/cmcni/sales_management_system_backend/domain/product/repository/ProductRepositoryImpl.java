@@ -1,6 +1,7 @@
 package com.cmcni.sales_management_system_backend.domain.product.repository;
 
 import com.cmcni.sales_management_system_backend.domain.product.entity.Product;
+import com.cmcni.sales_management_system_backend.domain.product.service.request.ProductExcelExportRequest;
 import com.cmcni.sales_management_system_backend.domain.product.service.request.ProductSearchRequest;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -55,6 +56,41 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         modelIdEq(productSearchRequest.getProductModelId()),
                         modelNameContains(productSearchRequest.getProductModelName()),
                         recommendedSellingPriceEq(productSearchRequest.getProductRecommendedSellingPrice())
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, totalCount == null ? 0 : totalCount);
+    }
+
+    @Override
+    public Page<Product> excelExport(ProductExcelExportRequest productExcelExportRequest, Pageable pageable) {
+        // 조회 쿼리 : 목록 표시에 필요한 model/category를 fetch join으로 함께 가져온다.
+        List<Product> content = queryFactory
+                .selectFrom(product)
+                .leftJoin(product.model, productModel).fetchJoin()
+                .leftJoin(product.category, productCategory).fetchJoin()
+                .where(
+                        categoryIdEq(productExcelExportRequest.getProductCategoryId()),
+                        modelIdEq(productExcelExportRequest.getProductModelId()),
+                        modelNameContains(productExcelExportRequest.getProductModelName()),
+                        recommendedSellingPriceEq(productExcelExportRequest.getProductRecommendedSellingPrice())
+                )
+                .orderBy(toOrderSpecifiers(pageable.getSort()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // 카운트 쿼리 : fetch join 없이 동일한 조건으로 전체 건수만 별도 조회한다.
+        Long totalCount = queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.model, productModel)
+                .leftJoin(product.category, productCategory)
+                .where(
+                        categoryIdEq(productExcelExportRequest.getProductCategoryId()),
+                        modelIdEq(productExcelExportRequest.getProductModelId()),
+                        modelNameContains(productExcelExportRequest.getProductModelName()),
+                        recommendedSellingPriceEq(productExcelExportRequest.getProductRecommendedSellingPrice())
                 )
                 .fetchOne();
 
