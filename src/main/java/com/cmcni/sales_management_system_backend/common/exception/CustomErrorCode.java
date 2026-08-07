@@ -29,7 +29,11 @@ public enum CustomErrorCode {
 
     PRODUCT_MODEL_IS_NOT_EXIST("존재하는 제품 모델이 아닙니다.", NOT_FOUND),
     PRODUCT_CATEGORY_IS_NOT_EXIST("존재하는 제품 카테고리가 아닙니다.", NOT_FOUND),
-    PRODUCT_CATEGORY_PARENT_IS_NOT_EXIST("부모 카테고리를 찾을 수 없습니다.", NOT_FOUND)
+    PRODUCT_CATEGORY_PARENT_IS_NOT_EXIST("부모 카테고리를 찾을 수 없습니다.", NOT_FOUND),
+
+    BUYER_IS_NOT_EXIST("존재하는 발주처가 아닙니다.", NOT_FOUND),
+
+    COMPANY_IS_NOT_EXIST("존재하는 회사가 아닙니다.", NOT_FOUND)
 
     ;
 

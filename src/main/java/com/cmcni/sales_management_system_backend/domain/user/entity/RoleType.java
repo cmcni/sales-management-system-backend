@@ -4,10 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum RoleType {
-    MASTER("마스터"),
-    ADMIN("어드민"),
-    USER("유저"),
-    VIEWER("뷰어");
+    MANAGEMENT("관리부"),
+    TECHNICAL_SALES("기술영업본부");
 
     private final String label;
 

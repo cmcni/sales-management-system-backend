@@ -39,7 +39,16 @@ public class ProductController {
         productService.create(productCreateRequestForm.toRequest());
         return ApiResponse.success();
     }
-    
+
+//    @PostMapping("/create/excel")
+//    @Operation(summary = "제품을 엑셀로 등록합니다.")
+//    public Object createExcel(@RequestParam("file") MultipartFile file) {
+//        // 1. 엑셀 파일 읽는거 분리
+//        // 2. 엑셀 파일 읽은 값 하나하나 entity로 만들어서 list 형태로 반환
+//        // 3. list 형태로 담긴 entity 한꺼번에 insert하기
+//        return ApiResponse.success();
+//    }
+
     @GetMapping("/search")
     @Operation(summary = "검색 조건에 따른 제품 목록을 검색합니다.")
     public Object search(@ModelAttribute ProductSearchRequestForm productSearchRequestForm,
